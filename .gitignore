@@ -1,0 +1,7 @@
+# Regenerated on npm run dev / build (do not commit)
+.generated/
+
+node_modules
+dist
+dist-ssr
+*.local
