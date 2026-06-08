@@ -8,22 +8,36 @@ import { extractTasks } from '@/lib/content/markdown'
 import { useProgressStore } from '@/stores/progress-store'
 import { useSettingsStore } from '@/stores/settings-store'
 import { useGamificationStore } from '@/stores/gamification-store'
+import { useResolvedTheme } from '@/hooks/use-theme'
 import { cn } from '@/lib/utils'
-import 'highlight.js/styles/github.css'
 
 function MermaidBlock({ code }: { code: string }) {
   const [svg, setSvg] = useState('')
+  const resolvedTheme = useResolvedTheme()
   const id = useMemo(() => `mermaid-${Math.random().toString(36).slice(2)}`, [])
 
   useEffect(() => {
+    let cancelled = false
     import('mermaid').then((mermaid) => {
-      mermaid.default.initialize({ startOnLoad: false, theme: 'dark' })
+      mermaid.default.initialize({
+        startOnLoad: false,
+        theme: resolvedTheme === 'dark' ? 'dark' : 'neutral',
+        securityLevel: 'loose',
+        fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif',
+      })
       mermaid.default
         .render(id, code)
-        .then(({ svg: rendered }) => setSvg(rendered))
-        .catch(() => setSvg(`<pre>${code}</pre>`))
+        .then(({ svg: rendered }) => {
+          if (!cancelled) setSvg(rendered)
+        })
+        .catch(() => {
+          if (!cancelled) setSvg(`<pre>${code}</pre>`)
+        })
     })
-  }, [code, id])
+    return () => {
+      cancelled = true
+    }
+  }, [code, id, resolvedTheme])
 
   return (
     <div

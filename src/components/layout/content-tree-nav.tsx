@@ -11,7 +11,15 @@ function FileIcon({ node }: { node: ContentNode }) {
   return <FileText className="h-3 w-3 shrink-0 text-primary" />
 }
 
-function TreeItem({ node, depth = 0 }: { node: ContentNode; depth?: number }) {
+function TreeItem({
+  node,
+  depth = 0,
+  onNavigate,
+}: {
+  node: ContentNode
+  depth?: number
+  onNavigate?: () => void
+}) {
   const [open, setOpen] = useState(depth < 2)
   const hasChildren = node.children.length > 0
   const isFile = node.kind === 'file'
@@ -20,6 +28,7 @@ function TreeItem({ node, depth = 0 }: { node: ContentNode; depth?: number }) {
     return (
       <Link
         to={`/read/${node.path}`}
+        onClick={onNavigate}
         className="flex items-center gap-1.5 rounded-md px-2 py-1.5 text-xs text-muted-foreground hover:bg-accent hover:text-foreground"
         style={{ paddingLeft: `${depth * 12 + 8}px` }}
         title={node.path}
@@ -45,7 +54,7 @@ function TreeItem({ node, depth = 0 }: { node: ContentNode; depth?: number }) {
       {open && hasChildren && (
         <div>
           {node.children.map((child) => (
-            <TreeItem key={child.id} node={child} depth={depth + 1} />
+            <TreeItem key={child.id} node={child} depth={depth + 1} onNavigate={onNavigate} />
           ))}
         </div>
       )}
@@ -53,12 +62,12 @@ function TreeItem({ node, depth = 0 }: { node: ContentNode; depth?: number }) {
   )
 }
 
-export function ContentTreeNav() {
+export function ContentTreeNav({ onNavigate }: { onNavigate?: () => void }) {
   const tree = getContentTree()
   return (
     <div className="space-y-0.5">
       {tree.map((node) => (
-        <TreeItem key={node.id} node={node} />
+        <TreeItem key={node.id} node={node} onNavigate={onNavigate} />
       ))}
     </div>
   )

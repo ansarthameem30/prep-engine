@@ -8,10 +8,10 @@ import type { DaySummary } from '@/lib/content/types'
 import { cn } from '@/lib/utils'
 
 const statusConfig = {
-  locked: { label: 'Locked', variant: 'muted' as const, icon: Lock },
-  available: { label: 'Available', variant: 'default' as const, icon: PlayCircle },
-  in_progress: { label: 'In Progress', variant: 'warning' as const, icon: PlayCircle },
-  completed: { label: 'Completed', variant: 'success' as const, icon: CheckCircle2 },
+  locked: { label: 'Locked', variant: 'muted' as const, icon: Lock, accent: 'bg-border' },
+  available: { label: 'Available', variant: 'default' as const, icon: PlayCircle, accent: 'bg-primary' },
+  in_progress: { label: 'In Progress', variant: 'warning' as const, icon: PlayCircle, accent: 'bg-amber-500' },
+  completed: { label: 'Completed', variant: 'success' as const, icon: CheckCircle2, accent: 'bg-emerald-500' },
 }
 
 export function DayCard({ day, index }: { day: DaySummary; index: number }) {
@@ -22,16 +22,18 @@ export function DayCard({ day, index }: { day: DaySummary; index: number }) {
   const body = (
     <Card
       className={cn(
-        'h-full transition-all hover:shadow-md',
+        'group relative h-full overflow-hidden transition-all duration-300',
         disabled && 'opacity-60',
-        !disabled && 'hover:border-primary/40',
+        !disabled && 'hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5',
       )}
     >
+      {/* status accent strip */}
+      <span className={cn('absolute inset-y-0 left-0 w-1', config.accent)} aria-hidden />
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between gap-2">
           <CardTitle className="text-base">Day {day.dayNumber}</CardTitle>
           <Badge variant={config.variant}>
-            <Icon className="mr-1 h-3 w-3" />
+            <Icon className="h-3 w-3" />
             {config.label}
           </Badge>
         </div>

@@ -11,7 +11,6 @@ import sql from 'highlight.js/lib/languages/sql'
 import { getHighlightLanguage } from '@/lib/content/file-types'
 import { useSettingsStore } from '@/stores/settings-store'
 import { cn } from '@/lib/utils'
-import 'highlight.js/styles/github.css'
 
 hljs.registerLanguage('javascript', javascript)
 hljs.registerLanguage('typescript', typescript)

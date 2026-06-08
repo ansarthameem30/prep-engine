@@ -1,5 +1,24 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useSettingsStore } from '@/stores/settings-store'
+
+/** Returns the effective 'light' | 'dark' mode, resolving 'system' live. */
+export function useResolvedTheme(): 'light' | 'dark' {
+  const theme = useSettingsStore((s) => s.theme)
+  const [systemDark, setSystemDark] = useState(
+    () => window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false,
+  )
+
+  useEffect(() => {
+    if (theme !== 'system') return
+    const mq = window.matchMedia('(prefers-color-scheme: dark)')
+    const handler = (e: MediaQueryListEvent) => setSystemDark(e.matches)
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [theme])
+
+  if (theme === 'system') return systemDark ? 'dark' : 'light'
+  return theme
+}
 
 export function useThemeEffect() {
   const theme = useSettingsStore((s) => s.theme)

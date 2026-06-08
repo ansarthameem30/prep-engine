@@ -14,9 +14,16 @@ export function CircularProgress({
   const radius = (size - stroke) / 2
   const circumference = 2 * Math.PI * radius
   const offset = circumference - (value / 100) * circumference
+  const gradientId = `cp-grad-${size}-${stroke}`
 
   return (
     <svg width={size} height={size} className={cn('-rotate-90', className)}>
+      <defs>
+        <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="hsl(var(--primary))" />
+          <stop offset="100%" stopColor="hsl(262 83% 68%)" />
+        </linearGradient>
+      </defs>
       <circle
         cx={size / 2}
         cy={size / 2}
@@ -31,12 +38,12 @@ export function CircularProgress({
         cy={size / 2}
         r={radius}
         fill="none"
-        stroke="currentColor"
+        stroke={`url(#${gradientId})`}
         strokeWidth={stroke}
         strokeDasharray={circumference}
         strokeDashoffset={offset}
         strokeLinecap="round"
-        className="text-primary transition-all duration-700"
+        className="transition-all duration-700"
       />
     </svg>
   )

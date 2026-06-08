@@ -2,6 +2,7 @@ import { Outlet } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Sidebar } from './sidebar'
 import { MobileNav } from './mobile-nav'
+import { MobileDrawer } from './mobile-drawer'
 import { TopBar } from './top-bar'
 import { SkipLink } from './skip-link'
 import { CelebrationModal } from '@/components/gamification/celebration-modal'
@@ -40,6 +41,7 @@ export function AppShell() {
         </motion.main>
       </div>
       <MobileNav />
+      <MobileDrawer />
       <CelebrationModal />
     </div>
   )
