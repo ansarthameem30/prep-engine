@@ -1,4 +1,3 @@
-import { Gauge } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { APP_NAME } from '@/lib/brand'
 
