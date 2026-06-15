@@ -14,7 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap"
       rel="stylesheet"
     />
     <title>Prep Engine</title>
@@ -23,15 +23,18 @@
       (function () {
         try {
           var raw = localStorage.getItem('prep-engine-settings')
-          var theme = raw ? (JSON.parse(raw).state || {}).theme : 'dark'
-          if (!theme) theme = 'dark'
+          var state = raw ? JSON.parse(raw).state || {} : {}
+          var theme = state.theme || 'dark'
+          var accent = state.accent || 'violet'
           var dark =
             theme === 'dark' ||
             (theme === 'system' &&
               window.matchMedia('(prefers-color-scheme: dark)').matches)
           document.documentElement.classList.toggle('dark', dark)
+          document.documentElement.setAttribute('data-accent', accent)
         } catch (e) {
           document.documentElement.classList.add('dark')
+          document.documentElement.setAttribute('data-accent', 'violet')
         }
       })()
     </script>

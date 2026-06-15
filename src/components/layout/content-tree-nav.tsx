@@ -1,14 +1,16 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { ChevronRight, FileCode2, FileJson, FileText, Folder } from 'lucide-react'
+import { NavLink } from 'react-router-dom'
+import { ChevronRight, FileCode2, FileJson, FileText, Folder, FolderOpen } from 'lucide-react'
 import { getContentTree } from '@/lib/content/discovery'
 import type { ContentNode } from '@/lib/content/types'
 import { cn } from '@/lib/utils'
 
 function FileIcon({ node }: { node: ContentNode }) {
-  if (node.fileCategory === 'code') return <FileCode2 className="h-3 w-3 shrink-0 text-violet-500" />
-  if (node.fileCategory === 'data') return <FileJson className="h-3 w-3 shrink-0 text-amber-500" />
-  return <FileText className="h-3 w-3 shrink-0 text-primary" />
+  if (node.fileCategory === 'code')
+    return <FileCode2 className="h-3.5 w-3.5 shrink-0 text-violet-400" />
+  if (node.fileCategory === 'data')
+    return <FileJson className="h-3.5 w-3.5 shrink-0 text-amber-400" />
+  return <FileText className="h-3.5 w-3.5 shrink-0 text-primary/80" />
 }
 
 function TreeItem({
@@ -26,16 +28,23 @@ function TreeItem({
 
   if (isFile) {
     return (
-      <Link
+      <NavLink
         to={`/read/${node.path}`}
         onClick={onNavigate}
-        className="flex items-center gap-1.5 rounded-md px-2 py-1.5 text-xs text-muted-foreground hover:bg-accent hover:text-foreground"
+        className={({ isActive }) =>
+          cn(
+            'flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs transition-colors',
+            isActive
+              ? 'bg-primary/12 font-medium text-primary'
+              : 'text-muted-foreground hover:bg-accent/60 hover:text-foreground',
+          )
+        }
         style={{ paddingLeft: `${depth * 12 + 8}px` }}
         title={node.path}
       >
         <FileIcon node={node} />
         <span className="truncate">{node.name}</span>
-      </Link>
+      </NavLink>
     )
   }
 
@@ -44,15 +53,22 @@ function TreeItem({
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="flex w-full items-center gap-1 rounded-md px-2 py-1.5 text-xs font-medium hover:bg-accent"
+        className="flex w-full items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-medium text-foreground/90 transition-colors hover:bg-accent/60"
         style={{ paddingLeft: `${depth * 12 + 8}px` }}
+        aria-expanded={open}
       >
-        <ChevronRight className={cn('h-3 w-3 transition-transform', open && 'rotate-90')} />
-        <Folder className="h-3 w-3 text-primary" />
+        <ChevronRight
+          className={cn('h-3.5 w-3.5 shrink-0 text-muted-foreground transition-transform', open && 'rotate-90')}
+        />
+        {open ? (
+          <FolderOpen className="h-3.5 w-3.5 shrink-0 text-primary" />
+        ) : (
+          <Folder className="h-3.5 w-3.5 shrink-0 text-primary" />
+        )}
         <span className="truncate">{node.name}</span>
       </button>
       {open && hasChildren && (
-        <div>
+        <div className="ml-3 border-l border-border/40">
           {node.children.map((child) => (
             <TreeItem key={child.id} node={child} depth={depth + 1} onNavigate={onNavigate} />
           ))}

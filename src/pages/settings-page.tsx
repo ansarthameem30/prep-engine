@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { Moon, Sun, Monitor, Download, Trash2, Info } from 'lucide-react'
+import { Download, Trash2, Info } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { useSettingsStore, type ThemeMode } from '@/stores/settings-store'
+import { ModeToggle, AccentSwatches } from '@/components/layout/theme-switcher'
+import { useSettingsStore } from '@/stores/settings-store'
 import { useDocumentTitle } from '@/hooks/use-document-title'
 import { APP_DESCRIPTION, APP_NAME, APP_TAGLINE, APP_VERSION } from '@/lib/brand'
 import { exportUserData, clearAllUserData } from '@/lib/storage-migrate'
@@ -11,22 +12,16 @@ import { sprintManifest } from '@/lib/content/loader'
 export function SettingsPage() {
   useDocumentTitle('Settings')
   const {
-    theme,
-    setTheme,
     fontSize,
     setFontSize,
     lineSpacing,
     setLineSpacing,
     contentWidth,
     setContentWidth,
+    readingFont,
+    setReadingFont,
   } = useSettingsStore()
   const [confirmReset, setConfirmReset] = useState(false)
-
-  const themes: { id: ThemeMode; label: string; icon: typeof Sun }[] = [
-    { id: 'light', label: 'Light', icon: Sun },
-    { id: 'dark', label: 'Dark', icon: Moon },
-    { id: 'system', label: 'System', icon: Monitor },
-  ]
 
   const handleExport = () => {
     const blob = new Blob([JSON.stringify(exportUserData(), null, 2)], {
@@ -59,18 +54,17 @@ export function SettingsPage() {
       <Card>
         <CardHeader>
           <CardTitle>Appearance</CardTitle>
+          <CardDescription>Pick a color mode and an accent that re-tints the whole app.</CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-wrap gap-2">
-          {themes.map(({ id, label, icon: Icon }) => (
-            <Button
-              key={id}
-              variant={theme === id ? 'default' : 'outline'}
-              onClick={() => setTheme(id)}
-            >
-              <Icon className="h-4 w-4" />
-              {label}
-            </Button>
-          ))}
+        <CardContent className="space-y-5">
+          <div>
+            <p className="mb-2 text-sm font-medium">Color mode</p>
+            <ModeToggle />
+          </div>
+          <div>
+            <p className="mb-3 text-sm font-medium">Accent color</p>
+            <AccentSwatches />
+          </div>
         </CardContent>
       </Card>
 
@@ -78,7 +72,22 @@ export function SettingsPage() {
         <CardHeader>
           <CardTitle>Reading experience</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-5">
+          <div>
+            <p className="mb-2 text-sm font-medium">Typeface</p>
+            <div className="flex flex-wrap gap-2">
+              {(['sans', 'serif'] as const).map((f) => (
+                <Button
+                  key={f}
+                  variant={readingFont === f ? 'default' : 'outline'}
+                  onClick={() => setReadingFont(f)}
+                  className="capitalize"
+                >
+                  {f === 'sans' ? 'Sans (Inter)' : 'Serif (Newsreader)'}
+                </Button>
+              ))}
+            </div>
+          </div>
           <div>
             <label htmlFor="font-size" className="text-sm font-medium">
               Font size: {fontSize}px

@@ -16,22 +16,33 @@ export function MobileNav() {
   if (readerMode === 'fullscreen') return null
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-border/60 bg-background/90 px-2 py-2 backdrop-blur-xl md:hidden">
+    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border/60 bg-background/85 px-2 pb-[max(0.4rem,env(safe-area-inset-bottom))] pt-1.5 backdrop-blur-xl md:hidden">
       <ul className="flex items-center justify-around">
         {items.map(({ to, icon: Icon, label }) => (
-          <li key={to}>
+          <li key={to} className="flex-1">
             <NavLink
               to={to}
               end={to === '/'}
               className={({ isActive }) =>
                 cn(
-                  'flex flex-col items-center gap-0.5 rounded-lg px-3 py-1 text-[10px] font-medium',
+                  'mx-auto flex w-full flex-col items-center gap-1 rounded-xl px-1 py-1.5 text-[10px] font-medium transition-colors',
                   isActive ? 'text-primary' : 'text-muted-foreground',
                 )
               }
             >
-              <Icon className="h-5 w-5" />
-              {label}
+              {({ isActive }) => (
+                <>
+                  <span
+                    className={cn(
+                      'flex h-8 w-12 items-center justify-center rounded-full transition-all',
+                      isActive && 'bg-primary/15',
+                    )}
+                  >
+                    <Icon className="h-5 w-5" strokeWidth={isActive ? 2.5 : 2} />
+                  </span>
+                  {label}
+                </>
+              )}
             </NavLink>
           </li>
         ))}

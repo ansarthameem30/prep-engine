@@ -60,7 +60,7 @@ export function MarkdownViewer({ path, initialContent }: MarkdownViewerProps) {
   const setTaskComplete = useProgressStore((s) => s.setTaskComplete)
   const markDocumentRead = useProgressStore((s) => s.markDocumentRead)
   const addXp = useGamificationStore((s) => s.addXp)
-  const { fontSize, lineSpacing, contentWidth } = useSettingsStore()
+  const { fontSize, lineSpacing, contentWidth, readingFont } = useSettingsStore()
 
   const tasks = useMemo(() => extractTasks(content, path), [content, path])
 
@@ -102,6 +102,7 @@ export function MarkdownViewer({ path, initialContent }: MarkdownViewerProps) {
         'prose-headings:scroll-mt-24',
         'prose-p:leading-[inherit] prose-li:leading-[inherit]',
         'prose-code:before:content-none prose-code:after:content-none',
+        readingFont === 'serif' && 'reading-serif',
         widthClass,
       )}
       style={{ fontSize: `${fontSize}px`, lineHeight: lineSpacing }}

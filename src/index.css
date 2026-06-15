@@ -22,6 +22,7 @@
   --color-ring: hsl(var(--ring));
   --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
+  --font-serif: 'Newsreader', Georgia, 'Times New Roman', ui-serif, serif;
 }
 
 :root {
@@ -64,6 +65,81 @@
   --ring: 252 92% 70%;
 }
 
+/* ──────────────────────────────────────────────────────────────
+   Accent palettes — toggled by [data-accent] on <html>.
+   Each accent overrides --primary / --ring and the soft --accent
+   tint in both light and dark. The rest of the UI inherits.
+   ────────────────────────────────────────────────────────────── */
+[data-accent='blue'] {
+  --primary: 221 83% 56%;
+  --ring: 221 83% 56%;
+  --accent: 221 60% 96%;
+  --accent-foreground: 221 70% 42%;
+}
+.dark[data-accent='blue'] {
+  --primary: 213 94% 68%;
+  --primary-foreground: 224 64% 8%;
+  --ring: 213 94% 68%;
+  --accent: 217 40% 18%;
+  --accent-foreground: 213 90% 84%;
+}
+
+[data-accent='emerald'] {
+  --primary: 160 84% 34%;
+  --ring: 160 84% 34%;
+  --accent: 158 50% 95%;
+  --accent-foreground: 161 78% 26%;
+}
+.dark[data-accent='emerald'] {
+  --primary: 158 72% 50%;
+  --primary-foreground: 165 70% 6%;
+  --ring: 158 72% 50%;
+  --accent: 158 32% 15%;
+  --accent-foreground: 156 72% 78%;
+}
+
+[data-accent='amber'] {
+  --primary: 28 92% 50%;
+  --ring: 28 92% 50%;
+  --accent: 36 84% 95%;
+  --accent-foreground: 26 82% 38%;
+}
+.dark[data-accent='amber'] {
+  --primary: 38 95% 58%;
+  --primary-foreground: 30 70% 7%;
+  --ring: 38 95% 58%;
+  --accent: 34 42% 15%;
+  --accent-foreground: 40 92% 76%;
+}
+
+[data-accent='rose'] {
+  --primary: 346 80% 56%;
+  --ring: 346 80% 56%;
+  --accent: 346 72% 96%;
+  --accent-foreground: 346 74% 44%;
+}
+.dark[data-accent='rose'] {
+  --primary: 346 90% 66%;
+  --primary-foreground: 346 60% 8%;
+  --ring: 346 90% 66%;
+  --accent: 346 35% 17%;
+  --accent-foreground: 346 88% 83%;
+}
+
+[data-accent='cyan'] {
+  --primary: 189 88% 36%;
+  --ring: 189 88% 36%;
+  --accent: 189 60% 95%;
+  --accent-foreground: 190 82% 28%;
+}
+.dark[data-accent='cyan'] {
+  --primary: 187 86% 52%;
+  --primary-foreground: 192 80% 6%;
+  --ring: 187 86% 52%;
+  --accent: 188 40% 15%;
+  --accent-foreground: 187 82% 78%;
+}
+
 * {
   border-color: hsl(var(--border));
 }
@@ -87,12 +163,56 @@ body {
   min-height: 100vh;
 }
 
-/* Premium ambient background tint in dark mode */
+/* Premium ambient background tint — follows the active accent */
+body {
+  background-image:
+    radial-gradient(55rem 55rem at 115% -12%, hsl(var(--primary) / 0.05), transparent 60%),
+    radial-gradient(45rem 45rem at -12% 8%, hsl(var(--primary) / 0.04), transparent 55%);
+  background-attachment: fixed;
+}
+
 .dark body {
   background-image:
-    radial-gradient(60rem 60rem at 120% -10%, hsl(252 92% 70% / 0.06), transparent 60%),
-    radial-gradient(50rem 50rem at -10% 10%, hsl(262 90% 66% / 0.05), transparent 55%);
-  background-attachment: fixed;
+    radial-gradient(60rem 60rem at 120% -10%, hsl(var(--primary) / 0.1), transparent 60%),
+    radial-gradient(50rem 50rem at -10% 10%, hsl(var(--primary) / 0.07), transparent 55%);
+}
+
+/* Accent-following gradient surface (logo, hero chips, etc.) */
+.accent-gradient {
+  background-image: linear-gradient(
+    135deg,
+    hsl(var(--primary)),
+    color-mix(in oklab, hsl(var(--primary)) 62%, white)
+  );
+}
+
+.accent-text-gradient {
+  background-image: linear-gradient(
+    120deg,
+    hsl(var(--primary)),
+    color-mix(in oklab, hsl(var(--primary)) 55%, white)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Top reading-progress bar */
+.reading-progress {
+  background-image: linear-gradient(
+    90deg,
+    hsl(var(--primary)),
+    color-mix(in oklab, hsl(var(--primary)) 55%, white)
+  );
+}
+
+/* Optional serif reading mode for long-form lessons */
+.reading-serif {
+  font-family: var(--font-serif);
+  letter-spacing: -0.003em;
+}
+.reading-serif :where(code, pre, kbd) {
+  font-family: var(--font-mono);
 }
 
 /* Selection */

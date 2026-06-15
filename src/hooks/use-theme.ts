@@ -22,6 +22,7 @@ export function useResolvedTheme(): 'light' | 'dark' {
 
 export function useThemeEffect() {
   const theme = useSettingsStore((s) => s.theme)
+  const accent = useSettingsStore((s) => s.accent)
 
   useEffect(() => {
     const root = document.documentElement
@@ -39,4 +40,9 @@ export function useThemeEffect() {
 
     apply(theme)
   }, [theme])
+
+  // Re-tint the whole UI by toggling the accent attribute on <html>.
+  useEffect(() => {
+    document.documentElement.setAttribute('data-accent', accent)
+  }, [accent])
 }

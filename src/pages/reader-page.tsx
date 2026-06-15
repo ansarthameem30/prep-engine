@@ -4,6 +4,7 @@ import { ChevronLeft, FileWarning } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { FileViewer } from '@/components/content/file-viewer'
 import { ReaderToolbar } from '@/components/markdown/reader-toolbar'
+import { ReadingProgress } from '@/components/markdown/reading-progress'
 import { isContentAvailable, loadFileContent } from '@/lib/content/discovery'
 import { getFileCategory } from '@/lib/content/file-types'
 import { useSettingsStore } from '@/stores/settings-store'
@@ -20,7 +21,10 @@ export function ReaderPage() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const readerMode = useSettingsStore((s) => s.readerMode)
+  const contentWidth = useSettingsStore((s) => s.contentWidth)
   const fileCategory = getFileCategory(path)
+  const columnClass =
+    contentWidth === 'narrow' ? 'max-w-2xl' : contentWidth === 'wide' ? 'max-w-5xl' : 'max-w-3xl'
 
   useEffect(() => {
     if (!isContentAvailable()) {
@@ -76,12 +80,15 @@ export function ReaderPage() {
           </CardContent>
         </Card>
       ) : (
-        <div className="space-y-8">
-          <ReaderToolbar path={path} content={content} fileCategory={fileCategory} />
-          <div className="rounded-2xl border border-border/50 bg-card/30 px-6 py-8 shadow-sm sm:px-10 sm:py-10 md:px-12 md:py-12">
-            <FileViewer path={path} content={content} />
+        <>
+          {readerMode !== 'fullscreen' && <ReadingProgress />}
+          <div className={cn('mx-auto', columnClass)}>
+            <ReaderToolbar path={path} content={content} fileCategory={fileCategory} />
+            <div className="rounded-2xl border border-border/50 bg-card/40 px-5 py-7 shadow-sm sm:px-9 sm:py-10 md:px-11 md:py-12">
+              <FileViewer path={path} content={content} />
+            </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   )

@@ -5,6 +5,7 @@ import { AppLogo } from '@/components/brand/app-logo'
 import { Button } from '@/components/ui/button'
 import { useSettingsStore } from '@/stores/settings-store'
 import { SidebarContent } from './sidebar'
+import { AccentSwatches, ModeToggle } from './theme-switcher'
 
 /**
  * Slide-over navigation drawer for small screens. Gives mobile users access to
@@ -61,6 +62,10 @@ export function MobileDrawer() {
               >
                 <X className="h-5 w-5" />
               </Button>
+            </div>
+            <div className="shrink-0 space-y-3 border-b border-border/60 px-4 py-3">
+              <ModeToggle className="w-full justify-between" />
+              <AccentSwatches className="justify-between" />
             </div>
             <div className="flex flex-1 flex-col overflow-hidden">
               <SidebarContent onNavigate={() => setOpen(false)} />

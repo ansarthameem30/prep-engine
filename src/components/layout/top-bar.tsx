@@ -6,6 +6,7 @@ import { useSettingsStore } from '@/stores/settings-store'
 import { useGamificationStore } from '@/stores/gamification-store'
 import { useProgressStore } from '@/stores/progress-store'
 import { GlobalSearchTrigger } from '@/components/search/global-search-trigger'
+import { ThemeMenu } from './theme-switcher'
 
 export function TopBar() {
   const { sidebarOpen, setSidebarOpen, mobileNavOpen, setMobileNavOpen, readerMode } =
@@ -46,7 +47,7 @@ export function TopBar() {
         <GlobalSearchTrigger />
       </div>
 
-      <div className="ml-auto flex items-center gap-2 text-sm sm:gap-3">
+      <div className="ml-auto flex items-center gap-1.5 text-sm sm:gap-2">
         <Button
           variant="ghost"
           size="icon"
@@ -68,6 +69,7 @@ export function TopBar() {
         >
           {xp} XP
         </span>
+        <ThemeMenu />
       </div>
     </header>
   )
